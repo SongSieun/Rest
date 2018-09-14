@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Rest</string>
     <string name="sub_description">Take care of your eyes :)</string>
+    <string name="start_eye_stretching">Start eye stretching</string>
 </resources>
