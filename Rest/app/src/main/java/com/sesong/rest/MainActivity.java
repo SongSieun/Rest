@@ -32,13 +32,14 @@ public class MainActivity extends AppCompatActivity {
     ImageView rightSeat, phoneNoti, blueScreen;
     private Handler handler = new Handler();
     int click = 0;
+    Vibrator vibrator;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         mainText = (TextView) findViewById(R.id.maintext);
@@ -62,6 +63,21 @@ public class MainActivity extends AppCompatActivity {
         eyeStretch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                eyeStretchFun();
+            }
+        });
+        blueScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+    private void eyeStretchFun() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
                 click = 1;
                 final ArrayList<String> stretching = new ArrayList<>();
                 stretching.add("초점을 맞추지 않은 채로 가볍게 위를 본다");
@@ -74,30 +90,25 @@ public class MainActivity extends AppCompatActivity {
                 stretching.add("눈 주위를 누르며\n\n안쪽에서 바깥쪽으로 문질러준다");
                 stretching.add("눈꺼풀 위를 가볍게 누른다");
                 stretching.add(":)");
-                mainText.setTextSize(12);
-                CountDownTimer timer = new CountDownTimer(33000, 3000) {
-                    int i = 0;
 
-                    public void onTick(long millisUntilFinished) {
-                        mainText.setText(stretching.get(i));
-                        vibrator.vibrate(200);
-                        i++;
+                for (int i = 0; i < 10; i++){
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-
-                    public void onFinish() {
-                        click = 0;
-                        // timer.cancel();
-                        mainText.setTextSize(100);
-                    }
-                }.start();
+                    final int sentence = i;
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mainText.setTextSize(12);
+                            mainText.setText(stretching.get(sentence));
+                            vibrator.vibrate(200);
+                        }
+                    });
+                }
             }
-        });
-        blueScreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+        }).start();
     }
 
     public void setTimeNoti(View view) {
@@ -116,18 +127,24 @@ public class MainActivity extends AppCompatActivity {
                         public void run() {
                             if (click == 0) {
                                 // UI 갱신
+                                mainText.setTextSize(100);
                                 mainText.setText(String.valueOf(time));
                                 progressBar.setProgress(time);
                             } else {
                                 progressBar.setProgress(time);
                             }
-                            if (time ==60) show();
+                            if (time == 60) {
+                                mainText.setTextSize(12);
+                                show();
+                                eyeStretchFun();
+                            }
                         }
                     });
                 }
             }
         }).start();
     }
+
     private void show() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "default");
         // 필수 항목
