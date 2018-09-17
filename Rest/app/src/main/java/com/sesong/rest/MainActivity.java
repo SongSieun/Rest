@@ -107,11 +107,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 }
+                click = 0;
             }
         }).start();
     }
 
-    public void setTimeNoti(View view) {
+    public void setTimeNoti(final View view) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -137,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                                 mainText.setTextSize(12);
                                 show();
                                 eyeStretchFun();
+                                setTimeNoti(view);
                             }
                         }
                     });
