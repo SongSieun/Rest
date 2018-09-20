@@ -3,8 +3,10 @@ package com.sesong.rest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -13,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +25,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -91,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 stretching.add("눈꺼풀 위를 가볍게 누른다");
                 stretching.add(":)");
 
-                for (int i = 0; i < 10; i++){
+                for (int i = 0; i < 10; i++) {
                     try {
                         Thread.sleep(200);
                     } catch (InterruptedException e) {
