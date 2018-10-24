@@ -3,9 +3,11 @@ package com.sesong.rest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +20,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,13 +33,14 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    ProgressBar progressBar;
-    TextView mainText;
-    Button eyeStretch;
-    ImageView rightSeat, phoneNoti, blueScreen;
+    private ProgressBar progressBar;
+    private TextView mainText;
+    private Button eyeStretch;
+    private ImageView rightSeat, phoneNoti, blueScreen;
     private Handler handler = new Handler();
-    int click = 0;
-    Vibrator vibrator;
+    private Boolean servicePowerFlag = false;
+    private Boolean mainTextFlag = false;
+    private Vibrator vibrator;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -79,10 +83,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void eyeStretchFun() {
+        mainTextFlag = true;
         new Thread(new Runnable() {
             @Override
             public void run() {
-                click = 1;
                 final ArrayList<String> stretching = new ArrayList<>();
                 stretching.add("초점을 맞추지 않은 채로 가볍게 위를 본다");
                 stretching.add("눈을 감는다");
@@ -97,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
                 for (int i = 0; i < 10; i++) {
                     try {
-                        Thread.sleep(200);
+                        Thread.sleep(300);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -111,44 +115,48 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 }
-                click = 0;
             }
         }).start();
+        mainTextFlag = false;
     }
 
     public void setTimeNoti(final View view) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i <= 60; i++) {
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    final int time = i;
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (click == 0) {
-                                // UI 갱신
-                                mainText.setTextSize(100);
-                                mainText.setText(String.valueOf(time));
-                                progressBar.setProgress(time);
-                            } else {
-                                progressBar.setProgress(time);
-                            }
-                            if (time == 60) {
-                                mainText.setTextSize(12);
-                                show();
-                                eyeStretchFun();
-                                setTimeNoti(view);
-                            }
-                        }
-                    });
-                }
-            }
-        }).start();
+        servicePowerFlag = !servicePowerFlag;
+        if (servicePowerFlag == true) {
+            Intent intent = new Intent(this, MyService.class);
+            startService(intent);
+        } else {
+            Intent intent = new Intent(this, MyService.class);
+            stopService(intent);
+        }
+    }
+
+    public void showCountText(String mCount) {
+        if (!mainTextFlag){
+            mainText.setText(mCount);
+        }
+        progressBar.setProgress(Integer.parseInt(mCount));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("CountingValue"));
+    }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("Counting");
+            showCountText(message);
+        }
+    };
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onPause();
     }
 
     private void show() {
@@ -183,4 +191,42 @@ public class MainActivity extends AppCompatActivity {
         // 알림 통지
         manager.notify(1, builder.build());
     }
+/*
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // 서비스에 바인딩
+        Intent intent = new Intent(this, MyService.class);
+        bindService(intent, mConnection, BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // 서비스와 연결 해제
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
+    }
+*/
+
+    /**
+     * bindService()를 통해 서비스와 연결될 때의 콜백 정의
+     *//*
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            // MyBinder와 연결될 것이며 IBinder 타입으로 넘어오는 것을 캐스팅하여 사용
+            MyService.MyBinder binder = (MyService.MyBinder) service;
+            myService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            // 예기치 않은 종료
+        }
+    };*/
 }
