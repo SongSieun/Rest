@@ -1,9 +1,19 @@
 package com.sesong.rest;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -11,15 +21,6 @@ public class MyService extends Service {
     private static final String TAG = MyService.class.getSimpleName();
     private Thread mThread;
     private int mCount = 0;
-    // MyService의 레퍼런스를 반환하는 Binder 객체
-    /*private IBinder mBinder = new MyBinder();
-
-    public class MyBinder extends Binder {
-        public MyService getService() {
-            return MyService.this;
-        }
-    }*/
-
     public MyService() {
     }
 
@@ -44,6 +45,7 @@ public class MyService extends Service {
                         Log.d("MyService", "서비스 동작 중" + mCount);
                         sendMessage();
                     }
+                    show();
                 }
             };
             mThread.start();
@@ -69,31 +71,42 @@ public class MyService extends Service {
         intent.putExtra("Counting", mCount);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
-/*
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.d(TAG, "onCreate: ");
-    }
-*/
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        /*Log.d(TAG, "onBind: ");
-        return mBinder;*/
         return null;
     }
-/*
-    @Override
-    public boolean onUnbind(Intent intent) {
-        Log.d(TAG, "onUnbind: ");
-        return super.onUnbind(intent);
-    }
 
-    // 바인드 된 컴포넌트에 카운팅 변수값 제공
-    public int getCount() {
-        return mCount;
-    }*/
+    private void show() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "default");
+        // 필수 항목
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setContentTitle("스마트폰 사용시간 경고");
+        builder.setContentText("과도한 스마트폰의 사용은 눈 건강에 해로울 수 있습니다.");
+        // 액션 정의
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        // 클릭 이벤트 설정
+        builder.setContentIntent(pendingIntent);
+        // 큰 아이콘 설정
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.mainicon);
+        builder.setLargeIcon(largeIcon);
+        // 색상 변경
+        builder.setColor(Color.RED);
+        // 기본 알림음 사운드 설정
+        Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_NOTIFICATION);
+        builder.setSound(ringtoneUri);
+        // 진동 설정: 대기시간, 진동시간, 대기시간, 진동시간 ... 반복패턴
+        long[] vibrate = {0, 100, 200, 300};
+        builder.setVibrate(vibrate);
+        builder.setAutoCancel(true);
+        // 알림 매니저
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        // 오레오에서는 알림 채널을 매니저에 생성해야 한다
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            manager.createNotificationChannel(new NotificationChannel("default", "기본 채널", NotificationManager.IMPORTANCE_DEFAULT));
+        }
+        // 알림 통지
+        manager.notify(1, builder.build());
+    }
 }
