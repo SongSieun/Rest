@@ -1,25 +1,11 @@
-package com.sesong.rest;
+package com.sesong.rest.Activity;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
-import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Vibrator;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,7 +15,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.sesong.rest.Service.MyService;
+import com.sesong.rest.R;
 
 import java.util.ArrayList;
 
@@ -49,12 +37,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mainText = (TextView) findViewById(R.id.maintext);
-        rightSeat = (ImageView) findViewById(R.id.rightseat);
-        phoneNoti = (ImageView) findViewById(R.id.noti);
-        eyeStretch = (Button) findViewById(R.id.eyesBtn);
-        blueScreen = (ImageView) findViewById(R.id.bluescreen);
+        progressBar = findViewById(R.id.progressBar);
+        mainText = findViewById(R.id.maintext);
+        rightSeat = findViewById(R.id.rightseat);
+        phoneNoti = findViewById(R.id.noti);
+        eyeStretch = findViewById(R.id.eyesBtn);
+        blueScreen = findViewById(R.id.bluescreen);
 
         rightSeat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void setTimeNoti(final View view) {
         servicePowerFlag = !servicePowerFlag;
-        if (servicePowerFlag == true) {
+        if (servicePowerFlag) {
             Intent intent = new Intent(this, MyService.class);
             startService(intent);
         } else {

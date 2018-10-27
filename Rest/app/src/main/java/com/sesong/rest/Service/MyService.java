@@ -1,4 +1,4 @@
-package com.sesong.rest;
+package com.sesong.rest.Service;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -16,6 +16,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
+import com.sesong.rest.Activity.MainActivity;
+import com.sesong.rest.R;
 
 public class MyService extends Service {
     private static final String TAG = MyService.class.getSimpleName();

@@ -1,9 +1,11 @@
-package com.sesong.rest;
+package com.sesong.rest.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+
+import com.sesong.rest.R;
 
 public class LoadingActivity extends AppCompatActivity {
 

@@ -11,17 +11,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoadingActivity">
+        <activity android:name=".Activity.LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".Activity.MainActivity" />
 
         <service
-            android:name=".MyService"
+            android:name=".Service.MyService"
             android:enabled="true"
             android:exported="true"></service>
     </application>
