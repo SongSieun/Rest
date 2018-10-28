@@ -3,6 +3,7 @@
     package="com.sesong.rest">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
@@ -22,6 +23,10 @@
 
         <service
             android:name=".Service.MyService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".Service.FilterService"
             android:enabled="true"
             android:exported="true"></service>
     </application>

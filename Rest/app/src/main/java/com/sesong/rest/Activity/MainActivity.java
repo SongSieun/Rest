@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.sesong.rest.Service.FilterService;
 import com.sesong.rest.Service.MyService;
 import com.sesong.rest.R;
 
@@ -27,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private Button eyeStretch;
     private ImageView rightSeat, phoneNoti, blueScreen;
     private Handler handler = new Handler();
-    private Boolean servicePowerFlag = false;
+    private Boolean countServiceFlag = false;
+    private Boolean filterServiceFlag = false;
     private Boolean mainTextFlag = false;
     private Vibrator vibrator;
 
@@ -66,7 +68,14 @@ public class MainActivity extends AppCompatActivity {
         blueScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                filterServiceFlag = !filterServiceFlag;
+                if (filterServiceFlag) {
+                    Intent intent = new Intent(MainActivity.this, FilterService.class);
+                    startService(intent);
+                } else {
+                    Intent intent = new Intent(MainActivity.this, FilterService.class);
+                    stopService(intent);
+                }
             }
         });
     }
@@ -109,8 +118,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setTimeNoti(final View view) {
-        servicePowerFlag = !servicePowerFlag;
-        if (servicePowerFlag) {
+        countServiceFlag = !countServiceFlag;
+        if (countServiceFlag) {
             Intent intent = new Intent(this, MyService.class);
             startService(intent);
         } else {

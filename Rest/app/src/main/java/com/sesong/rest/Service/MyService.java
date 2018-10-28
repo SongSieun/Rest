@@ -56,11 +56,11 @@ public class MyService extends Service {
         return START_STICKY;
     }
 
+    // stopService에 의해 호출됨
     @Override
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy: ");
-        // stopService에 의해 호출됨
         // 스레드를 정지시킴
         if (mThread != null) {
             mThread.interrupt();
