@@ -16,8 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.sesong.rest.R;
-
 public class FilterService extends Service implements SensorEventListener {
     private View view;
     private WindowManager windowManager;
@@ -25,6 +23,7 @@ public class FilterService extends Service implements SensorEventListener {
     private SensorManager sensorManager;
     private Sensor sensor;
     public int mSensorCount = 0;
+    private int sensorVaule;
     private final Handler handler = new Handler();
 
     @Override
@@ -33,6 +32,8 @@ public class FilterService extends Service implements SensorEventListener {
         // 센서 서비스를 얻어오고 조도센서와 연결
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        // 센서를 센서 매니저에 등록
+        sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_UI);
 
         view = new FilterView(this);
         params = new WindowManager.LayoutParams(
@@ -50,8 +51,6 @@ public class FilterService extends Service implements SensorEventListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // 센서를 센서 매니저에 등록
-        sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_UI);
         return START_STICKY;
     }
 
@@ -82,7 +81,8 @@ public class FilterService extends Service implements SensorEventListener {
 
             // 조도 센서의 값은 event.values[0]에 있음
             str = "Brightness Sensor Value : " + event.values[0] + "lux";
-            Log.d("Sensor Data ", str);
+            sensorVaule = (int) event.values[0];
+            Log.d("Sensor_Data ", str);
         }
     }
 
@@ -105,7 +105,7 @@ public class FilterService extends Service implements SensorEventListener {
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
 
-            if (mSensorCount < 5) {
+            if (sensorVaule < 10) {
                 canvas.drawARGB(100, 255, 212, 0);
             }
             handler.postDelayed(runnable, 1000);
