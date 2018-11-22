@@ -1,20 +1,26 @@
 package com.sesong.rest.Activity;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sesong.rest.Service.FilterService;
 import com.sesong.rest.Service.MyService;
@@ -49,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         rightSeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Toast.makeText(MainActivity.this, "기능 준비중 입니다.", Toast.LENGTH_SHORT).show();
             }
         });
         phoneNoti.setOnClickListener(new View.OnClickListener() {
@@ -61,8 +67,12 @@ public class MainActivity extends AppCompatActivity {
         eyeStretch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainTextFlag = true;
-                eyeStretchFun();
+                if (mainTextFlag) {
+                    Toast.makeText(MainActivity.this, "이미 기능이 실행 중 입니다.", Toast.LENGTH_SHORT).show();
+                } else {
+                    mainTextFlag = true;
+                    eyeStretchFun();
+                }
             }
         });
         blueScreen.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
                 for (int i = 0; i < 10; i++) {
                     try {
-                        Thread.sleep(300);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -120,9 +130,11 @@ public class MainActivity extends AppCompatActivity {
     public void setTimeNoti(final View view) {
         countServiceFlag = !countServiceFlag;
         if (countServiceFlag) {
+            Toast.makeText(MainActivity.this, "한번 더 누르면 기능을 종료하실 수 있습니다.", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MyService.class);
             startService(intent);
         } else {
+            Toast.makeText(MainActivity.this, "한번 더 누르면 기능을 시작하실 수 있습니다.", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MyService.class);
             stopService(intent);
         }
@@ -130,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void showCountText(int mCount) {
         if (!mainTextFlag) {
-            mainText.setTextSize(100);
+            mainText.setTextSize(64);
             mainText.setText(String.valueOf(mCount));
         }
         progressBar.setProgress(mCount);

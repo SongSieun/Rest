@@ -24,6 +24,7 @@ public class MyService extends Service {
     private static final String TAG = MyService.class.getSimpleName();
     private Thread mThread;
     private int mCount = 0;
+
     public MyService() {
     }
 
@@ -34,7 +35,7 @@ public class MyService extends Service {
             mThread = new Thread("My Thread") {
                 @Override
                 public void run() {
-                    for (int i = 0; i < 60; i++) {
+                    for (int i = 0; i < 360; i++) {
                         try {
                             mCount++;
                             // 1초 마다 쉬기
@@ -74,6 +75,7 @@ public class MyService extends Service {
         intent.putExtra("Counting", mCount);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
