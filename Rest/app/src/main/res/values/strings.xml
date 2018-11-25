@@ -2,4 +2,9 @@
     <string name="app_name">Rest</string>
     <string name="sub_description">Take care of your eyes :)</string>
     <string name="start_eye_stretching">Start eye stretching</string>
+    <string name="Rest">Rest</string>
+    <string name="todo">TODO</string>
+    <string name="notify_your_cell_phone_time">Notify your cell phone time.</string>
+    <string name="blue_screen_cut_filter">Blue screen cut filter.</string>
+    <string name="face_recognition">Face recognition.</string>\
 </resources>

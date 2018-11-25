@@ -1,5 +1,6 @@
 package com.sesong.rest.Activity;
 
+import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -7,8 +8,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -35,9 +39,10 @@ public class MainActivity extends AppCompatActivity {
     private ImageView rightSeat, phoneNoti, blueScreen;
     private Handler handler = new Handler();
     private Boolean countServiceFlag = false;
-    private Boolean filterServiceFlag = false;
+    private Boolean filterServiceFlag = true;
     private Boolean mainTextFlag = false;
     private Vibrator vibrator;
+    private int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = -010101;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -78,13 +83,12 @@ public class MainActivity extends AppCompatActivity {
         blueScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filterServiceFlag = !filterServiceFlag;
                 if (filterServiceFlag) {
-                    Intent intent = new Intent(MainActivity.this, FilterService.class);
-                    startService(intent);
+                    checkPermission();
                 } else {
                     Intent intent = new Intent(MainActivity.this, FilterService.class);
                     stopService(intent);
+                    Toast.makeText(MainActivity.this, "블루스크린 차단 필터가 종료되었습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -108,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
                 for (int i = 0; i < 10; i++) {
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(3000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -146,6 +150,39 @@ public class MainActivity extends AppCompatActivity {
             mainText.setText(String.valueOf(mCount));
         }
         progressBar.setProgress(mCount);
+    }
+
+    public void checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+            } else {
+                filterServiceFlag = !filterServiceFlag;
+                Toast.makeText(MainActivity.this, "블루스크린 차단 필터가 실행되었습니다.", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, FilterService.class);
+                startService(intent);
+            }
+        } else {
+            filterServiceFlag = !filterServiceFlag;
+            Toast.makeText(MainActivity.this, "블루스크린 차단 필터가 실행되었습니다.", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, FilterService.class);
+            startService(intent);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
+            if (!Settings.canDrawOverlays(this)) {
+                Toast.makeText(MainActivity.this, "블루스크린 차단 필터를 사용하려면 권한 승인을 해주세요.", Toast.LENGTH_SHORT).show();
+            } else {
+                startService(new Intent(MainActivity.this, MyService.class));
+            }
+        }
     }
 
     @Override
