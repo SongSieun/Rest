@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context=".Activity.MainActivity">
+    tools:context=".ui.MainActivity">
 
     <ImageView
-        android:id="@+id/rightseat"
+        android:id="@+id/rightSeat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -17,12 +17,12 @@
         android:src="@drawable/ic_airline_seat_recline_normal_black_24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintLeft_toRightOf="@+id/noti"
+        app:layout_constraintLeft_toRightOf="@+id/phoneNoti"
         app:layout_constraintTop_toTopOf="@+id/guideline"
         android:contentDescription="@string/face_recognition" />
 
     <ImageView
-        android:id="@+id/noti"
+        android:id="@+id/phoneNoti"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -30,13 +30,13 @@
         android:layout_marginRight="8dp"
         android:src="@drawable/ic_notifications_black_24dp"
         app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintLeft_toRightOf="@+id/bluescreen"
-        app:layout_constraintRight_toLeftOf="@+id/rightseat"
+        app:layout_constraintLeft_toRightOf="@+id/blueScreen"
+        app:layout_constraintRight_toLeftOf="@+id/rightSeat"
         app:layout_constraintTop_toTopOf="@+id/guideline"
         android:contentDescription="@string/notify_your_cell_phone_time" />
 
     <ImageView
-        android:id="@+id/bluescreen"
+        android:id="@+id/blueScreen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
@@ -44,13 +44,13 @@
         android:layout_marginTop="8dp"
         android:src="@drawable/ic_invert_colors_black_24dp"
         app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintRight_toLeftOf="@id/noti"
+        app:layout_constraintRight_toLeftOf="@id/phoneNoti"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline"
         android:contentDescription="@string/blue_screen_cut_filter" />
 
     <TextView
-        android:id="@+id/maintext"
+        android:id="@+id/mainText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/thickfont"
@@ -62,7 +62,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.constraint.Guideline
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/eyesBtn"
+        android:id="@+id/eyeStretch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -107,4 +107,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.95" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

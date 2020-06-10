@@ -12,12 +12,11 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import android.util.Log;
 
-import com.sesong.rest.Activity.MainActivity;
+import com.sesong.rest.ui.MainActivity;
 import com.sesong.rest.R;
 
 public class MyService extends Service {
@@ -73,7 +72,7 @@ public class MyService extends Service {
     private void sendMessage() {
         Intent intent = new Intent("CountingValue");
         intent.putExtra("Counting", mCount);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+//        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     @Nullable
